@@ -1,14 +1,13 @@
 package ru.zapovednik.controllers;
 
 
+import com.google.gson.Gson;
 import me.postaddict.instagramscraper.Instagram;
 import me.postaddict.instagramscraper.exception.InstagramAuthException;
 import me.postaddict.instagramscraper.exception.InstagramException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.zapovednik.db.Photo;
+import ru.zapovednik.db.Storage;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -16,23 +15,41 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Created by andrey-goa on 22.04.17.
- */
 @RestController
 @RequestMapping(value = "/", produces = "application/json")
 public class ZapovednikController {
+
     Instagram instagram = new Instagram();
+
+    Storage storage = new Storage("zapovednik_crawler");
+
+    Storage goths = new Storage("goths"); // Для разных категорий людей мы можем хранить разные списки тэгов, инстаграмм для готов, инстаграмм для рокеров.
+    Storage rockBand = new Storage("rockBand");
 
     @PostConstruct
     public void init() throws InstagramException, InstagramAuthException, IOException {
-        instagram.withCredentials("x.corp.dm@gmail.com", "startups");
+        instagram.withCredentials("zapovednik_crawler", "startups");
         instagram.login();
     }
 
     @RequestMapping(value = "/photos/{tag}", method = RequestMethod.GET)
     public List<Photo> getPhotos(@PathVariable("tag") String tag) throws IOException, InstagramException, InstagramAuthException {
         return instagram.getMediasByTag(tag, 50).stream().filter(m -> m.caption != null)
-                        .map(m -> new Photo(m.caption, m.imageUrls.standard)).collect(toList());
+                .map(m -> new Photo(m.caption, m.imageUrls.standard)).collect(toList());
+    }
+
+    @RequestMapping(value = "/setTagState", params = {"tag", "state"}, method = RequestMethod.GET)
+    public void setTagState(@RequestParam("tag") String tag, @RequestParam("state") String state) throws Throwable {
+        storage.setTagWeight(tag, Storage.State.find(state).weight);
+    }
+
+    @RequestMapping(value = "/setTagWeight", params = {"tag", "weight"}, method = RequestMethod.GET)
+    public void setTagWeight(@RequestParam("tag") String tag, @RequestParam("weight") float weight) throws Throwable {
+        storage.setTagWeight(tag, weight);
+    }
+
+    @RequestMapping(value = "/getAllTagWeight", method = RequestMethod.GET)
+    public String getAllTagWeight() throws Throwable {
+        return new Gson().toJson(storage.getAllTagWeight());
     }
 }

@@ -7,15 +7,13 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Created by andrey-goa on 22.04.17.
- */
 public class Photo {
-    @JsonProperty public List<String> tags;
+
     @JsonProperty public String url;
+    @JsonProperty public List<String> tags;
 
     public Photo(String caption, String url) {
         this.url = url;
-        this.tags = Arrays.asList(caption.split(" ")).stream().filter(s -> s.startsWith("#")).collect(toList());
+        this.tags = Arrays.stream(caption.split(" ")).filter(s -> s.startsWith("#")).collect(toList());
     }
 }
