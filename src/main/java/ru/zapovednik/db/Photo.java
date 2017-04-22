@@ -15,7 +15,7 @@ public class Photo {
     @JsonProperty public String url;
 
     public Photo(String caption, String url) {
-        this.tags = Arrays.asList(caption.split(" ")).stream().filter(s -> s.startsWith("#")).collect(toList());
         this.url = url;
+        this.tags = Arrays.asList(caption.split(" ")).stream().filter(s -> s.startsWith("#")).collect(toList());
     }
 }
