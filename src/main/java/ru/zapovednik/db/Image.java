@@ -11,7 +11,6 @@ public class Image {
     private Double latitude;
     private Double longitude;
     private List<Tag> tags;
-    private boolean like;
 
     public Integer getId() {
         return id;
@@ -33,9 +32,6 @@ public class Image {
         return tags;
     }
 
-    public boolean getLike() {
-        return like;
-    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -57,7 +53,4 @@ public class Image {
         this.tags = tags;
     }
 
-    public void setLike(boolean like) {
-        this.like = like;
-    }
 }

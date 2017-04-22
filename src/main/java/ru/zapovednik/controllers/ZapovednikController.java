@@ -14,11 +14,11 @@ import ru.zapovednik.db.Tag;
 @RestController
 public class ZapovednikController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     public String getHello() throws JSONException{
         Tag t1 = new Tag();
         t1.setName("#красивыеместа");
-        return new JSONObject().put("tag", t1.getName() ).toString();
+        return new JSONObject(). put("tag", t1.getName() ).toString();
 
     }
 }
