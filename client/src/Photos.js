@@ -6,11 +6,27 @@ export default class Photos extends React.Component {
   constructor() {
     super();
 
-    const proto = {url: 'https://scontent-arn2-1.cdninstagram.com/t51.2885-15/s480x480/e35/17586803_201785576991043_2484062329268862976_n.jpg', tags: ['a', 'b', 'c']};
-    this.state = {'photos': [proto, proto, proto, proto, proto, proto],  tags: []};
+    //const proto = {url: 'https://scontent-arn2-1.cdninstagram.com/t51.2885-15/s480x480/e35/17586803_201785576991043_2484062329268862976_n.jpg', tags: ['a', 'b', 'c']};
+    this.state = {'photos': [],  tags: []};
 
     this.onGreenTag = this.onGreenTag.bind(this);
     this.onRedTag = this.onRedTag.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  componentWillReceiveProps() {
+    this.loadData();
+  }
+
+  loadData() {
+    fetch('/photos/' + this.props.filter).then((result) => {
+      return result.json();
+    }).then((json) => {
+      this.setState({photos: json});
+    });
   }
 
   render() {
@@ -18,7 +34,7 @@ export default class Photos extends React.Component {
       return <li className="photo">
         <div>
            <img src={photo.url} width={300} height={300}/>
-           <p><Tags value={photo.tags} colors={this.state.tags} onGreenTag={this.onGreenTag} onRedTag={this.onRedTag}/></p>
+           <Tags value={photo.tags} colors={this.state.tags} onGreenTag={this.onGreenTag} onRedTag={this.onRedTag} selectTag={this.props.selectTag}/>
         </div>
       </li>;
     });

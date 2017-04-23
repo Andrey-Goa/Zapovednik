@@ -39,7 +39,7 @@ public class ZapovednikController {
         WeightUpdater weightUpdater = new WeightUpdater(storage);
 
         List<Photo> result = instagram.getMediasByTag(tag, 50).stream().filter(m -> m.caption != null)
-                .map(m -> new Photo(m.link, m.caption, m.imageUrls.standard)).collect(toList());
+                .map(m -> new Photo(m.caption, m.caption, m.imageUrls.standard)).collect(toList());
 
         result.forEach(weightUpdater::update);
         result.sort(Photo::compareTo);
