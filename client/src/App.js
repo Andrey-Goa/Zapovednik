@@ -25,13 +25,18 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <p className="App-intro">
-          Interesting places
-        </p>
-        Tag: <input type="text" value={this.state.input} onChange={this.handleFilterChange} /> <button onClick={() => this.applyFilter()}>Find</button>
+        <div className="input-group">
+          <span className="input-group-addon" id="sizing-addon1">#</span>
+          <input type="text" value={this.state.input} onChange={this.handleFilterChange} className="form-control" aria-describedby="sizing-addon1"/>
+          <span className="input-group-btn">
+            <button className="btn btn-default" onClick={() => this.applyFilter()}>Find</button>
+           </span>
+
+        </div>
         <Photos filter={this.state.filter} selectTag={this.applyFilter}/>
       </div>
     );
+
   }
 }
 

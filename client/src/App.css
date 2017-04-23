@@ -27,11 +27,11 @@
   float: left;
 }
 
-.green {
+.good {
   color: green;
 }
 
-.red {
+.bad {
   color: red;
 }
 
@@ -45,4 +45,8 @@ li {
 
 .option {
   font-weight: 700;
+}
+
+.container {
+    padding-top: 16px;
 }
