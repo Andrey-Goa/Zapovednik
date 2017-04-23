@@ -45,13 +45,18 @@ export default class Photos extends React.Component {
   }
 
   onGreenTag(tag) {
-    this.state.tags[tag] = 'green';
-    this.setState({tags: this.state.tags});
+    this.saveTag(tag, 'good');
   }
 
   onRedTag(tag) {
-    this.state.tags[tag] = 'red';
-    this.setState({tags: this.state.tags});
+    this.saveTag(tag, 'bad');
   }
+
+  saveTag(tag, value) {
+    this.state.tags[tag] = value;
+    this.setState({tags: this.state.tags});
+    fetch(`/setTagState?tag=${tag}&state=${value}`, {method: 'post'});
+  }
+
 
 }
