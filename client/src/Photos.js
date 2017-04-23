@@ -34,7 +34,7 @@ export default class Photos extends React.Component {
       return <li className="photo">
         <div>
            <img src={photo.url} width={300} height={300}/>
-           <Tags value={photo.tags} colors={this.state.tags} onGreenTag={this.onGreenTag} onRedTag={this.onRedTag}/>
+           <Tags value={photo.tags} colors={this.state.tags} onGreenTag={this.onGreenTag} onRedTag={this.onRedTag} selectTag={this.props.selectTag}/>
         </div>
       </li>;
     });

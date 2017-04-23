@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import './App.css';
-import Places from './Places';
+import Photos from './Photos';
 
 
 class App extends Component {
 
   constructor() {
     super();
-    this.state = {filter: 'заброс'};
+    this.state = {filter: 'заброс', input: 'заброс'};
 
-    this.handleChange = this.handleChange.bind(this);
+    this.applyFilter = this.applyFilter.bind(this);
+    this.handleFilterInputChange = this.handleFilterInputChange.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({filter: event.target.value});
+  handleFilterInputChange(event) {
+    this.setState({input: event.target.value});
+  }
+
+  applyFilter(filter) {
+    this.setState({filter: filter || this.state.input});
+    this.setState({input: filter || this.state.input});
   }
 
   render() {
@@ -22,8 +28,8 @@ class App extends Component {
         <p className="App-intro">
           Interesting places
         </p>
-        Tag: <input type="text" defaultValue={this.state.filter} ref="filter"/> <button onClick={this.handleChange}>Find</button>
-        <Places filter={this.state.filter}/>
+        Tag: <input type="text" value={this.state.input} onChange={this.handleFilterChange} /> <button onClick={() => this.applyFilter()}>Find</button>
+        <Photos filter={this.state.filter} selectTag={this.applyFilter}/>
       </div>
     );
   }
