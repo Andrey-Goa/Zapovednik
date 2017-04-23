@@ -49,10 +49,7 @@ public class Storage {
         }
         
         public static State find(String key) throws Throwable {
-            return Arrays.stream(State.values()).filter(
-                    state -> state.key.equals(key))
-                    .findFirst().orElseThrow(
-                            (Supplier<Throwable>) InvalidParameterException::new);
+            return State.valueOf(key.toUpperCase());
         }
     }
 }

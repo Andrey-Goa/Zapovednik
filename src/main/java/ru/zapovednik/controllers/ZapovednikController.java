@@ -47,12 +47,12 @@ public class ZapovednikController {
         return result;
     }
 
-    @RequestMapping(value = "/setTagState", params = {"tag", "state"}, method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/setTagState", params = {"tag", "state"}, method = RequestMethod.POST)
     public void setTagState(@RequestParam("tag") String tag, @RequestParam("state") String state) throws Throwable {
         storage.setTagWeight(tag, Storage.State.find(state).weight);
     }
 
-    @RequestMapping(value = "/setTagWeight", params = {"tag", "weight"}, method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/setTagWeight", params = {"tag", "weight"}, method = RequestMethod.POST)
     public void setTagWeight(@RequestParam("tag") String tag, @RequestParam("weight") float weight) throws Throwable {
         storage.setTagWeight(tag, weight);
     }
