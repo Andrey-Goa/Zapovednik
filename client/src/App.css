@@ -34,3 +34,15 @@
 .red {
   color: red;
 }
+
+.tags {
+  height: 300px;
+}
+
+li {
+  list-style: none;
+}
+
+.option {
+  font-weight: 700;
+}

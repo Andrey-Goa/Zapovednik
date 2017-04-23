@@ -7,13 +7,13 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = {};
+    this.state = {filter: 'заброс'};
 
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
-    this.setState({tag: event.target.value});
+    this.setState({filter: event.target.value});
   }
 
   render() {
@@ -22,8 +22,8 @@ class App extends Component {
         <p className="App-intro">
           Interesting places
         </p>
-        Tag: <input type="text" value={this.state.tag} onChange={this.handleChange}/>
-        <Places/>
+        Tag: <input type="text" defaultValue={this.state.filter} ref="filter"/> <button onClick={this.handleChange}>Find</button>
+        <Places filter={this.state.filter}/>
       </div>
     );
   }
