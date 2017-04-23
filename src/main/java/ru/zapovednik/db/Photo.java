@@ -9,11 +9,13 @@ import static java.util.stream.Collectors.toList;
 
 public class Photo implements Comparable<Photo> {
 
+    @JsonProperty public String instagram;
     @JsonProperty public String url;
     @JsonProperty public List<String> tags;
     @JsonProperty public float weight;
 
-    public Photo(String caption, String url) {
+    public Photo(String instagram, String caption, String url) {
+        this.instagram = instagram;
         this.url = url;
         this.tags = Arrays.stream(caption.split(" ")).filter(s -> s.startsWith("#")).collect(toList());
     }
