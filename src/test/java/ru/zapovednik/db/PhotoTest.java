@@ -12,7 +12,7 @@ public class PhotoTest {
 
     @Test
     public void parseTags() {
-        Photo photo = new Photo("Обуховская больница, здание заброшено #rooftop_spb#photorussia_pit#spbgram", "");
+        Photo photo = new Photo("","Обуховская больница, здание заброшено #rooftop_spb#photorussia_pit#spbgram", "");
         assertEquals(3, photo.tags.size());
     }
 }
