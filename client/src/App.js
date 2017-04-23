@@ -27,7 +27,7 @@ class App extends Component {
       <div className="App">
         <div className="input-group">
           <span className="input-group-addon" id="sizing-addon1">#</span>
-          <input type="text" value={this.state.input} onChange={this.handleFilterChange} className="form-control" aria-describedby="sizing-addon1"/>
+          <input type="text" value={this.state.input} onChange={this.handleFilterInputChange} className="form-control" aria-describedby="sizing-addon1"/>
           <span className="input-group-btn">
             <button className="btn btn-default" onClick={() => this.applyFilter()}>Find</button>
            </span>
