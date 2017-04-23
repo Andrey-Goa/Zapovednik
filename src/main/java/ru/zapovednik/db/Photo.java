@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class Photo implements Comparable<Photo> {
 
@@ -19,7 +20,9 @@ public class Photo implements Comparable<Photo> {
 
     public Photo(String caption, String url) {
         this.url = url;
-        this.tags = Arrays.stream(StringUtils.substringAfter(caption, "#").split("#")).map(t -> StringUtils.substringBefore(t, " ")).collect(toList());
+        this.tags = Arrays.stream(substringAfter(caption, "#").split("#")).map(t -> substringBefore(t, " ")).collect(toList());
+        this.tags = this.tags.size() > 10 ? this.tags.subList(0, 10) : this.tags;
+
     }
 
     @Override
