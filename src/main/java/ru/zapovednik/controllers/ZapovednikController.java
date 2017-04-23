@@ -38,7 +38,7 @@ public class ZapovednikController {
     public List<Photo> getPhotos(@PathVariable("tag") String tag) throws IOException, InstagramException, InstagramAuthException {
         WeightUpdater weightUpdater = new WeightUpdater(storage);
 
-        List<Photo> result = instagram.getMediasByTag(tag, 150).stream().filter(m -> m.caption != null)
+        List<Photo> result = instagram.getMediasByTag(tag, 50).stream().filter(m -> m.caption != null)
                 .map(m -> new Photo(m.caption, m.imageUrls.standard)).collect(toList());
 
         result.forEach(weightUpdater::update);
