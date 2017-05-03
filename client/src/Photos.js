@@ -22,7 +22,7 @@ export default class Photos extends React.Component {
   }
 
   loadData() {
-    fetch('/photos/' + this.props.filter).then((result) => {
+    fetch('photos/' + this.props.filter).then((result) => {
       return result.json();
     }).then((json) => {
       this.setState({photos: json});
