@@ -11,29 +11,27 @@ import java.util.stream.Collectors;
 
 public class Storage {
 
-    private Preferences prefs;
+    private Map<String, Float> prefs = new HashMap<>();
 
-    public Storage(String name) {
+   /* public Storage(String name) {
         prefs = Preferences.userRoot().node(name);
-    }
+    }*/
 
     public float setTagWeight(String tag, float weight) {
-        prefs.putFloat(tag, weight);
+        prefs.put(tag, weight);
         return weight;
     }
 
     public float getTagWeight(String tag) {
-        return prefs.getFloat(tag, 0f);
+        if(prefs.containsKey(tag)) {
+            return prefs.get(tag);
+        }else{
+            return 0;
+        }
     }
 
-    public Map<String, Float> getAllTagWeight() throws BackingStoreException {
-        Map<String, Float> result = new HashMap<>();
-
-        for (String key : prefs.keys()) {
-            result.put(key, prefs.getFloat(key, 0f));
-        }
-
-        return result;
+    public Map<String, Float> getAllTagWeight() {
+        return prefs;
     }
 
     public enum State {

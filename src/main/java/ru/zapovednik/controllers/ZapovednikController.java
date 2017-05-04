@@ -23,10 +23,7 @@ public class ZapovednikController {
 
     Instagram instagram = new Instagram();
 
-    Storage storage = new Storage("zapovednik_crawler");
-
-    Storage goths = new Storage("goths"); // Для разных категорий людей мы можем хранить разные списки тэгов, инстаграмм для готов, инстаграмм для рокеров.
-    Storage rockBand = new Storage("rockBand");
+    Storage storage = new Storage();
 
     @PostConstruct
     public void init() throws InstagramException, InstagramAuthException, IOException {
@@ -43,7 +40,6 @@ public class ZapovednikController {
 
         result.forEach(weightUpdater::update);
         result.sort(Photo::compareTo);
-
         return result;
     }
 
