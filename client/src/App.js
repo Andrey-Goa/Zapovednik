@@ -7,11 +7,13 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = {filter: 'kransodarling', input: 'kransodarling'};
+    this.state = {filter: 'kransodarling', input: 'kransodarling', savedTags: {'good' : [], 'bad' : []}};
 
     this.onFindClick = this.onFindClick.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
     this.handleFilterInputChange = this.handleFilterInputChange.bind(this);
+
+    this.loadSavedTags();
   }
 
   handleFilterInputChange(event) {
@@ -25,7 +27,18 @@ class App extends Component {
 
   updateFilter(filter) {
     this.setState({filter: filter || this.state.input, input: filter || this.state.input});
+    this.loadSavedTags();
   }
+
+
+  loadSavedTags() {
+    fetch('savedTags').then((result) => {
+      return result.json();
+    }).then((json) => {
+      this.setState({savedTags: json});
+    });
+  }
+
 
   render() {
     return (
@@ -41,6 +54,10 @@ class App extends Component {
             </span>
           </div>
         </form>
+        <div>
+          <div> Good: {this.state.savedTags.good.join(', ')} </div>
+          <div> Bad: {this.state.savedTags.bad.join(', ')} </div>
+        </div>
         <Photos filter={this.state.filter} selectTag={this.updateFilter}/>
       </div>
     );
