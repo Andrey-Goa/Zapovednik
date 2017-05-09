@@ -17,21 +17,25 @@ export default class Photos extends React.Component {
     this.loadData();
   }
 
-  componentWillReceiveProps() {
-    this.loadData();
+  componentWillReceiveProps(nextProps) {
+    if(this.props.filter !== nextProps.filter) {
+      this.loadData(nextProps.filter);
+    }
   }
 
-  loadData() {
-    fetch('photos/' + this.props.filter).then((result) => {
+  loadData(filter) {
+    filter = filter || this.props.filter;
+    this.setState({loading: true});
+    fetch('photos/' + filter).then((result) => {
       return result.json();
     }).then((json) => {
-      this.setState({photos: json});
+      this.setState({photos: json, loading: false});
     });
   }
 
   render() {
     const result = this.state.photos.map(photo => {
-      return <li className="photo">
+      return  <li className="photo">
         <div>
            <img src={photo.url} width={300} height={300}/>
            <Tags value={photo.tags} colors={this.state.tags} onGreenTag={this.onGreenTag} onRedTag={this.onRedTag} selectTag={this.props.selectTag}/>
@@ -40,7 +44,7 @@ export default class Photos extends React.Component {
     });
 
     return (
-      <div className="container">{result}</div>
+      <div className="container">{this.state.loading ? <div> Loading ... </div> : result}</div>
     );
   }
 

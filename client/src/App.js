@@ -7,7 +7,7 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = {filter: 'заброс', input: 'заброс'};
+    this.state = {filter: 'kransodarling', input: 'kransodarling'};
 
     this.applyFilter = this.applyFilter.bind(this);
     this.handleFilterInputChange = this.handleFilterInputChange.bind(this);
@@ -18,8 +18,9 @@ class App extends Component {
   }
 
   applyFilter(filter) {
-    this.setState({filter: filter || this.state.input});
-    this.setState({input: filter || this.state.input});
+    let value = (filter || this.state.input);
+    console.log(value);
+    this.setState({filter: value, input: value});
   }
 
   render() {
