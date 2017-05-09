@@ -6,7 +6,6 @@ export default class Photos extends React.Component {
   constructor() {
     super();
 
-    //const proto = {url: 'https://scontent-arn2-1.cdninstagram.com/t51.2885-15/s480x480/e35/17586803_201785576991043_2484062329268862976_n.jpg', tags: ['a', 'b', 'c']};
     this.state = {'photos': [],  tags: []};
 
     this.onGreenTag = this.onGreenTag.bind(this);
@@ -23,9 +22,10 @@ export default class Photos extends React.Component {
     }
   }
 
+
   loadData(filter) {
     filter = filter || this.props.filter;
-    this.setState({loading: true});
+    this.setState({photos: [], loading: true});
     fetch('photos/' + filter).then((result) => {
       return result.json();
     }).then((json) => {
@@ -34,7 +34,7 @@ export default class Photos extends React.Component {
   }
 
   render() {
-    const result = this.state.photos.map(photo => {
+    let result = this.state.photos.map(photo => {
       return  <li className="photo">
         <div>
            <img src={photo.url} width={300} height={300}/>
@@ -42,6 +42,7 @@ export default class Photos extends React.Component {
         </div>
       </li>;
     });
+    if(result.length == 0) result = <div>No photos</div>;
 
     return (
       <div className="container">{this.state.loading ? <div> Loading ... </div> : result}</div>
