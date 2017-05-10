@@ -37,7 +37,7 @@ export default class Photos extends React.Component {
     let result = this.state.photos.map(photo => {
       return  <li className="photo">
         <div>
-           <img src={photo.url} width={300} height={300}/>
+           <img src={photo.url} width={300} height={300} onClick={() => this.openInNewTab(photo.instagram)}/>
            <Tags value={photo.tags} colors={this.state.tags} onGreenTag={this.onGreenTag} onRedTag={this.onRedTag} selectTag={this.props.selectTag}/>
         </div>
       </li>;
@@ -63,5 +63,8 @@ export default class Photos extends React.Component {
     fetch(`/setTagState?tag=${tag}&state=${value}`, {method: 'post'});
   }
 
-
+  openInNewTab(url) {
+      var win = window.open(url, '_blank');
+      win.focus();
+  }
 }
