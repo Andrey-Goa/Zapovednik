@@ -9,23 +9,31 @@ class Store {
   constructor() {
     extendObservable(this, {
       filter : null,
-      tags: [],
+      tags: {'good' : [], 'bad' : []},
       photos : {}
-    })
+    });
+    this.loadSavedTags();
   }
+
+  loadSavedTags() {
+    fetch('savedTags').then((result) => {
+      return result.json();
+    }).then((json) => {
+      this.tags = json;
+    });
+  }
+
 }
 
 const App = observer(class App extends Component {
 
   constructor() {
     super();
-    this.state = {input: 'kransodarling', savedTags: {'good' : [], 'bad' : []}};
+    this.state = {input: 'kransodarling'};
 
     this.onFindClick = this.onFindClick.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
     this.handleFilterInputChange = this.handleFilterInputChange.bind(this);
-
-    this.loadSavedTags();
   }
 
   handleFilterInputChange(event) {
@@ -34,22 +42,13 @@ const App = observer(class App extends Component {
 
   onFindClick(event) {
     if(event) event.preventDefault();
-    this.updateFilter();
+    this.updateFilter(this.state.input);
   }
 
   updateFilter(filter) {
-    this.props.store.filter = filter || this.state.input;
+    this.props.store.filter = filter;
     this.setState({input: filter || this.state.input});
-    this.loadSavedTags();
-  }
-
-
-  loadSavedTags() {
-    fetch('savedTags').then((result) => {
-      return result.json();
-    }).then((json) => {
-      this.setState({savedTags: json});
-    });
+    this.props.store.loadSavedTags();
   }
 
 
@@ -68,8 +67,8 @@ const App = observer(class App extends Component {
           </div>
         </form>
         <div>
-          <div> Good: {this.state.savedTags.good.join(', ')} </div>
-          <div> Bad: {this.state.savedTags.bad.join(', ')} </div>
+          <div> Good: {this.props.store.tags.good.join(', ')} </div>
+          <div> Bad: {this.props.store.tags.bad.join(', ')} </div>
         </div>
         <Photos filter={this.props.store.filter} selectTag={this.updateFilter}/>
       </div>
