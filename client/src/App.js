@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
 import Photos from './Photos';
-import {extendObservable} from 'mobx';
+import {extendObservable, action, autorun, whyRun} from 'mobx';
 import {observer} from 'mobx-react';
 
 
 class Store {
   constructor() {
     extendObservable(this, {
-      filter : null,
+      filter : 'заброс',
       tags: {'good' : [], 'bad' : []},
-      photos : {}
+      loading: false,
+      photos : []
     });
     this.loadSavedTags();
+    autorun(() => this.loadPhotos());
   }
 
   loadSavedTags() {
@@ -23,13 +25,24 @@ class Store {
     });
   }
 
+  loadPhotos() {
+      this.photos = [];
+      this.loading = true;
+      fetch('photos/' + this.filter).then((result) => {
+        return result.json();
+      }).then(action((json) => {
+          this.photos = json;
+          this.loading = false;
+      }));
+  }
+
 }
 
 const App = observer(class App extends Component {
 
   constructor() {
     super();
-    this.state = {input: 'kransodarling'};
+    this.state = {input: 'заброс'};
 
     this.onFindClick = this.onFindClick.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
@@ -68,10 +81,11 @@ const App = observer(class App extends Component {
           </div>
         </form>
         <div>
+          Filter: {store.filter}
           <div> Good: {store.tags.good.join(', ')} </div>
           <div> Bad: {store.tags.bad.join(', ')} </div>
         </div>
-        <Photos filter={store.filter} selectTag={this.updateFilter}/>
+        <Photos  store={store} selectTag={this.updateFilter}/>
       </div>
     );
 
