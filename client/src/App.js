@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
 import './App.css';
 import Photos from './Photos';
+import {extendObservable} from 'mobx';
+import {observer} from 'mobx-react';
 
 
-class App extends Component {
+class Store {
+  constructor() {
+    extendObservable(this, {
+      filter : null,
+      tags: [],
+      photos : {}
+    })
+  }
+}
+
+const App = observer(class App extends Component {
 
   constructor() {
     super();
-    this.state = {filter: 'kransodarling', input: 'kransodarling', savedTags: {'good' : [], 'bad' : []}};
+    this.state = {input: 'kransodarling', savedTags: {'good' : [], 'bad' : []}};
 
     this.onFindClick = this.onFindClick.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
@@ -26,7 +38,8 @@ class App extends Component {
   }
 
   updateFilter(filter) {
-    this.setState({filter: filter || this.state.input, input: filter || this.state.input});
+    this.props.store.filter = filter || this.state.input;
+    this.setState({input: filter || this.state.input});
     this.loadSavedTags();
   }
 
@@ -58,11 +71,11 @@ class App extends Component {
           <div> Good: {this.state.savedTags.good.join(', ')} </div>
           <div> Bad: {this.state.savedTags.bad.join(', ')} </div>
         </div>
-        <Photos filter={this.state.filter} selectTag={this.updateFilter}/>
+        <Photos filter={this.props.store.filter} selectTag={this.updateFilter}/>
       </div>
     );
 
   }
-}
+});
 
-export default App;
+export { Store, App };
