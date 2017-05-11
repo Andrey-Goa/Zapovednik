@@ -47,12 +47,13 @@ const App = observer(class App extends Component {
 
   updateFilter(filter) {
     this.props.store.filter = filter;
-    this.setState({input: filter || this.state.input});
     this.props.store.loadSavedTags();
+    this.setState({input: filter});
   }
 
 
   render() {
+    const store = this.props.store;
     return (
       <div className="App">
         <form>
@@ -67,10 +68,10 @@ const App = observer(class App extends Component {
           </div>
         </form>
         <div>
-          <div> Good: {this.props.store.tags.good.join(', ')} </div>
-          <div> Bad: {this.props.store.tags.bad.join(', ')} </div>
+          <div> Good: {store.tags.good.join(', ')} </div>
+          <div> Bad: {store.tags.bad.join(', ')} </div>
         </div>
-        <Photos filter={this.props.store.filter} selectTag={this.updateFilter}/>
+        <Photos filter={store.filter} selectTag={this.updateFilter}/>
       </div>
     );
 
