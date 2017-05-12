@@ -7,6 +7,7 @@ import DevTools from 'mobx-react-devtools';
 
 const photos = new PhotoStore();
 const tags = new TagStore();
+tags.loadSavedTags();
 
 ReactDOM.render(
   <div>

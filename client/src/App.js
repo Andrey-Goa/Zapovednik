@@ -35,11 +35,10 @@ class TagStore {
       good: [],
       bad: []
     });
-    this.loadSavedTags();
   }
 
   loadSavedTags() {
-    fetch('savedTags').then((result) => {
+    return fetch('savedTags').then((result) => {
       return result.json();
     }).then((json) => {
       this.good = json.good;
