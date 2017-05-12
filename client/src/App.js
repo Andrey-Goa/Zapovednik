@@ -48,8 +48,8 @@ class TagStore {
   }
 
   tagColor(tag) {
-    if(this.good.includes(tag)) return 'good';
-    else if(this.bad.includes[tag]) return 'bad';
+    if(this.good.indexOf(tag) !== -1) return 'good';
+    else if(this.bad.indexOf(tag) !== -1) return 'bad';
     return 'none';
    }
 
