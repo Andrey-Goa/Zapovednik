@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Store, App} from './App';
+import {PhotoStore, TagStore, App} from './App';
 import './index.css';
+import DevTools from 'mobx-react-devtools';
 
-const store = new Store();
+
+const photos = new PhotoStore();
+const tags = new TagStore();
 
 ReactDOM.render(
-  <App store={store}/>,
+  <div>
+    <App photoStore={photos} tagStore={tags}/>,
+    <DevTools />
+  </div>,
   document.getElementById('root')
 );
