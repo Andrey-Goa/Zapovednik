@@ -65,26 +65,19 @@ const App = observer(class App extends Component {
 
   constructor() {
     super();
-    this.state = {input: 'заброс'};
 
     this.onFindClick = this.onFindClick.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
-    this.handleFilterInputChange = this.handleFilterInputChange.bind(this);
-  }
-
-  handleFilterInputChange(event) {
-    this.setState({input: event.target.value});
   }
 
   onFindClick(event) {
     if(event) event.preventDefault();
-    this.updateFilter(this.state.input);
+    this.updateFilter(this.refs.filter.value);
   }
 
   updateFilter(filter) {
-    this.props.store.filter = filter;
-    this.props.store.loadSavedTags();
-    this.setState({input: filter});
+    this.props.photoStore.filter = filter;
+    this.refs.filter.value = filter;
   }
 
 
@@ -93,14 +86,14 @@ const App = observer(class App extends Component {
     const tags = this.props.tagStore;
     return (
       <div className="App">
-        <form>
+        <form onSubmit={this.onFindClick}>
           <div className="input-group">
 
             <span className="input-group-addon" id="sizing-addon1">#</span>
-            <input type="text" value={this.state.input} onChange={this.handleFilterInputChange} className="form-control" aria-describedby="sizing-addon1"/>
+            <input type="text" ref="filter" className="form-control" aria-describedby="sizing-addon1"/>
 
             <span className="input-group-btn">
-              <button className="btn btn-default" onClick={this.onFindClick}>Find</button>
+              <button className="btn btn-default">Find</button>
             </span>
           </div>
         </form>
@@ -112,7 +105,6 @@ const App = observer(class App extends Component {
         <Photos photos={photos} tags={tags} selectTag={this.updateFilter}/>
       </div>
     );
-
   }
 });
 
