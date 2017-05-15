@@ -12,9 +12,9 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://127.0.0.1:5432/zapoved"/>
+        <property name="url" value="jdbc:postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT/$OPENSHIFT_APP_NAME"/>
         <property name="username" value="postgres"/>
-        <property name="password" value="1234"/>
+        <property name="password" value="postgres"/>
     </bean>
 
     <bean id="entityManagerFactory"
