@@ -4,21 +4,21 @@ package ru.zapovednik.controllers;
 import me.postaddict.instagramscraper.Instagram;
 import me.postaddict.instagramscraper.exception.InstagramAuthException;
 import me.postaddict.instagramscraper.exception.InstagramException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.zapovednik.db.Photo;
-import ru.zapovednik.db.Storage;
-import ru.zapovednik.db.WeightUpdater;
+import ru.zapovednik.db.*;
+import ru.zapovednik.service.TagService;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +28,9 @@ public class ZapovednikController {
 
     Instagram instagram = new Instagram();
 
-    Storage storage = new Storage();
+    @Autowired
+    private TagService tagService;
+
 
     @PostConstruct
     public void init() throws InstagramException, InstagramAuthException, IOException {
@@ -38,36 +40,44 @@ public class ZapovednikController {
 
     @RequestMapping(value = "/photos/{tag}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     public List<Photo> getPhotos(@PathVariable("tag") String tag) throws IOException, InstagramException, InstagramAuthException {
-        WeightUpdater weightUpdater = new WeightUpdater(storage);
 
         List<Photo> result = instagram.getMediasByTag(tag, 50).stream().filter(m -> m.caption != null)
                 .map(m -> new Photo(m.link, m.caption, m.imageUrls.standard)).collect(toList());
 
-        result.forEach(weightUpdater::update);
+        Iterator iterator = result.iterator();
+        while (iterator.hasNext()){
+            update((Photo) iterator.next());
+        }
         result.sort(Photo::compareTo);
         return result;
     }
 
-    @RequestMapping(value = "/setTagState", params = {"tag", "state"}, method = RequestMethod.POST)
+
+  @RequestMapping(value = "/setTagState", params = {"tag", "state"}, method = RequestMethod.POST)
     public void setTagState(@RequestParam("tag") String tag, @RequestParam("state") String state) throws Throwable {
-        storage.setTagWeight(tag, Storage.State.find(state).weight);
+        Tag newTag = new Tag();
+        newTag.setName(tag);
+        newTag.setState(State.find(state));
+        tagService.create(newTag);
     }
 
-    @RequestMapping(value = "/setTagWeight", params = {"tag", "weight"}, method = RequestMethod.POST)
-    public void setTagWeight(@RequestParam("tag") String tag, @RequestParam("weight") float weight) throws Throwable {
-        storage.setTagWeight(tag, weight);
-    }
 
-    @RequestMapping(value = "/savedTags", method = RequestMethod.GET)
+   @RequestMapping(value = "/savedTags", method = RequestMethod.GET)
     public Map<String, Object> getAllTagWeight() throws Throwable {
-        Predicate<Map.Entry<String, Float>> condition = e -> e.getValue() >= 0.0;
         HashMap<String, Object> result = new HashMap<>();
-        result.put("good", filter(condition));
-        result.put("bad", filter(condition.negate()));
+        List<String> good_tag = tagService.allGood();
+        List<String> bad_tag = tagService.allBad();
+        result.put("good", good_tag);
+        result.put("bad", bad_tag);
         return result;
     }
 
-    private List<String> filter(Predicate<Map.Entry<String, Float>> condition) {
-        return storage.getAllTagWeight().entrySet().stream().filter(condition).map(Map.Entry::getKey).collect(toList());
+
+    public void update(Photo photo) {
+        photo.weight = photo.tags.stream().map(tag -> tagService.getState(tag).weight).reduce((r, v) -> r += v).orElse(0f);
+
     }
+
+
+
 }
