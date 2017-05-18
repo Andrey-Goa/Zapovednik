@@ -18,12 +18,19 @@ public class TagService{
 
     private State bad = State.BAD;
     private State good = State.GOOD;
+    private List <String> good_tag;
+    private List <String> bad_tag;
 
     @Autowired
     private TagRepository tagRepository;
 
     public Iterable<Tag> all() {
         return tagRepository.findAll();
+    }
+
+    public void allTagsName() {
+        good_tag = allGood();
+        bad_tag =allBad();
     }
 
     public List<Tag> allState(State state) {
@@ -67,6 +74,17 @@ public class TagService{
         } else {
             return State.NEUTRAL;
         }
+    }
+
+    public State getStateFromMap(String name){
+        if(good_tag.contains(name)){
+            return State.GOOD;
+        } else if(bad_tag.contains(name)) {
+            return State.BAD;
+        }
+
+        return State.NEUTRAL;
+
     }
 
     public  Tag findTag(String name){

@@ -43,7 +43,7 @@ public class ZapovednikController {
 
         List<Photo> result = instagram.getMediasByTag(tag, 50).stream().filter(m -> m.caption != null)
                 .map(m -> new Photo(m.link, m.caption, m.imageUrls.standard)).collect(toList());
-
+        tagService.allTagsName();
         Iterator iterator = result.iterator();
         while (iterator.hasNext()){
             update((Photo) iterator.next());
@@ -74,7 +74,7 @@ public class ZapovednikController {
 
 
     public void update(Photo photo) {
-        photo.weight = photo.tags.stream().map(tag -> tagService.getState(tag).weight).reduce((r, v) -> r += v).orElse(0f);
+        photo.weight = photo.tags.stream().map(tag -> tagService.getStateFromMap(tag).weight).reduce((r, v) -> r += v).orElse(0f);
 
     }
 
